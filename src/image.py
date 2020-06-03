@@ -1,0 +1,61 @@
+"""Image and bitmap processing utils"""
+from PIL import Image
+import numpy as np
+
+# Scale down images larger than this
+MAX_SIZE = 1000
+
+
+def read_image(fname: str) -> (Image.Image, np.array):
+    """Read file, return image and its bitmap array"""
+    im = Image.open(fname)
+    while im.width > MAX_SIZE or im.height > MAX_SIZE:
+        im = im.resize((im.width // 2, im.height // 2))
+    bitmap = im.convert('1')
+    a = np.asarray(bitmap)
+    return im, a
+
+
+def shrink_vertically(c: np.array, p: int):
+    top, bottom = 0, len(c)
+    while top < bottom:
+        if all(c[top]):
+            top += 1
+            p += 1
+        elif all(c[bottom - 1]):
+            bottom -= 1
+        else:
+            break
+    return c[top:bottom], p
+
+
+def values_around(a, i, j):
+    return [a[i + x, j + y]
+            for x in range(-1, 2) for y in range(-1, 2)
+            if (x, y) != (0, 0)
+            and 0 <= i + x < a.shape[0]
+            and 0 <= j + y < a.shape[1]]
+
+
+def remove_noise(c, pos):
+    # Shrink one pixel from each side
+    c = np.copy(c[1:-1, 1:-1])
+    pos = (pos[0] + 1, pos[1] + 1)
+    # Remove isolated pixels
+    for i in range(c.shape[0]):
+        for j in range(c.shape[1]):
+            if not c[i, j] and all(values_around(c, i, j)):
+                c[i, j] = True
+    return c, pos
+
+
+def shrink(c, pos=(0, 0)):
+    """Crop out empty margins of a bitmap"""
+    # Shrink vertically
+    c, vpos = shrink_vertically(c, pos[0])
+    # Shrink horizontally
+    t = np.transpose(c)
+    t, hpos = shrink_vertically(t, pos[1])
+    return np.transpose(t), (vpos, hpos)
+
+
