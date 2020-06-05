@@ -13,6 +13,7 @@ def read_image(fname: str) -> (Image.Image, np.array):
         im = im.resize((im.width // 2, im.height // 2))
     bitmap = im.convert('1')
     a = np.asarray(bitmap)
+    a = remove_noise(a)
     return im, a
 
 
@@ -37,20 +38,12 @@ def values_around(a, i, j):
             and 0 <= j + y < a.shape[1]]
 
 
-def remove_noise(c, pos):
+def shrink(c, pos=(0, 0)):
+    """Crop out empty margins of a bitmap"""
     # Shrink one pixel from each side
     c = np.copy(c[1:-1, 1:-1])
     pos = (pos[0] + 1, pos[1] + 1)
-    # Remove isolated pixels
-    for i in range(c.shape[0]):
-        for j in range(c.shape[1]):
-            if not c[i, j] and all(values_around(c, i, j)):
-                c[i, j] = True
-    return c, pos
-
-
-def shrink(c, pos=(0, 0)):
-    """Crop out empty margins of a bitmap"""
+    c = remove_noise(c)
     # Shrink vertically
     c, vpos = shrink_vertically(c, pos[0])
     # Shrink horizontally
@@ -59,3 +52,25 @@ def shrink(c, pos=(0, 0)):
     return np.transpose(t), (vpos, hpos)
 
 
+def remove_noise(c):
+    c = np.copy(c)
+    # Remove isolated pixels
+    for i in range(c.shape[0]):
+        for j in range(c.shape[1]):
+            if not c[i, j] and all(values_around(c, i, j)):
+                c[i, j] = True
+    return c
+
+
+def show_cells(a, cells):
+    """Display bitmap with outlines of all cells; for debugging only"""
+    im = Image.fromarray(a).convert('RGB')
+    color = 0x0000ff
+    for c, coords, _ in cells:
+        for i in range(-1, c.shape[0] + 2):
+            im.putpixel((coords[1] - 1, coords[0] + i), color)
+            im.putpixel((coords[1] + c.shape[1] + 1, coords[0] + i), color)
+        for i in range(-1, c.shape[1] + 2):
+            im.putpixel((coords[1] + i, coords[0] - 1), color)
+            im.putpixel((coords[1] + i, coords[0] + c.shape[0] + 1), color)
+    im.show()
