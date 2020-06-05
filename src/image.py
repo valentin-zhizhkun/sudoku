@@ -67,10 +67,10 @@ def show_cells(a, cells):
     im = Image.fromarray(a).convert('RGB')
     color = 0x0000ff
     for c, coords, _ in cells:
-        for i in range(-1, c.shape[0] + 2):
+        for i in range(-1, c.shape[0] + 1):
             im.putpixel((coords[1] - 1, coords[0] + i), color)
-            im.putpixel((coords[1] + c.shape[1] + 1, coords[0] + i), color)
-        for i in range(-1, c.shape[1] + 2):
+            im.putpixel((coords[1] + c.shape[1], coords[0] + i), color)
+        for i in range(-1, c.shape[1] + 1):
             im.putpixel((coords[1] + i, coords[0] - 1), color)
-            im.putpixel((coords[1] + i, coords[0] + c.shape[0] + 1), color)
+            im.putpixel((coords[1] + i, coords[0] + c.shape[0]), color)
     im.show()
