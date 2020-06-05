@@ -5,8 +5,8 @@ import image
 
 def test_read_image():
     im, a = image.read_image('data/sudoku1.jpg')
-    assert (im.width, im.height) == (300, 300)
-    assert a.shape == (300, 300)
+    assert (im.width, im.height) == (298, 298)
+    assert a.shape == (298, 298)
 
 
 def test_values_around():
@@ -20,14 +20,17 @@ def test_values_around():
 
 def test_shrink():
     c = np.array([
-        [True, True, True],
-        [True, False, True],
-        [True, False, True],
+        [True, True, True, True, True],
+        [True, True, True, True, True],
+        [True, True, False, True, True],
+        [True, True, False, True, True],
+        [True, True, True, True, True],
     ])
     expected = np.array([
         [False],
         [False],
     ])
     shrunk, position = image.shrink(c, (0, 0))
+    print(shrunk)
     assert np.array_equal(shrunk, expected)
-    assert position == (1, 1)
+    assert position == (2, 2)

@@ -20,7 +20,7 @@ def detect_horizontal_lines(a, brightness, num):
 def detect_vertical_segments(a, num_segments=9):
     height = a.shape[0]
     # At least 4% of horizontal lines should define grid boundary
-    num_lines = height // 25
+    num_lines = max(height // 25, num_segments - 1)
     # But not too many lines
     max_num_lines = max(height // 10, num_segments + 1)
     brightness = get_lines_brightness(a)

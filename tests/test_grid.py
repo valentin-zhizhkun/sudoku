@@ -33,6 +33,8 @@ def test_detect_vertical_segments():
     (1, 'jpg'),
     (2, 'png'),
     (3, 'jpg'),
+    (4, 'jpg'),
+    (5, 'png'),
 ])
 def test_detection(example, ext):
     im, a = image.read_image(f'data/sudoku{example}.{ext}')

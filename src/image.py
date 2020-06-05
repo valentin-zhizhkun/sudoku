@@ -13,7 +13,8 @@ def read_image(fname: str) -> (Image.Image, np.array):
         im = im.resize((im.width // 2, im.height // 2))
     bitmap = im.convert('1')
     a = np.asarray(bitmap)
-    a = remove_noise(a)
+    a, pos = shrink(a)
+    im = im.crop((pos[1], pos[0], pos[1] + a.shape[1], pos[0] + a.shape[0]))
     return im, a
 
 
