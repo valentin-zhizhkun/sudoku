@@ -1,4 +1,4 @@
-"""Sudoku grid recognition"""
+"""Sudoku grid detection"""
 import numpy as np
 
 import image
@@ -49,7 +49,7 @@ def detect_vertical_segments(a, num_segments=9):
         if len(res) >= num_segments:
             # Ignore all but first 9 segments (e.g. image footer etc.)
             return res[:num_segments]
-        # Not enough segments found: try with more lines that we detected just now
+        # Not enough segments found: try with more lines than we detected just now
         num_lines = sum(h_lines) + 1
 
     return []  # Nothing found

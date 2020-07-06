@@ -45,13 +45,14 @@ def reshape_bitmap(a):
 
 def read_image(fname):
     im = Image.open(fname)
-    bitmap = im.convert('1')
+    bitmap = im.convert('1')  # Monochrome bitmap
     a = np.asarray(bitmap)
     a = reshape_bitmap(a)
     return a, bitmap
 
 
 def read_image_set(basedir='data/digits'):
+    """Read dataset for training/evaluating 1-9 digit recognition model"""
     instances = []
     classes = []
     bitmaps = []
