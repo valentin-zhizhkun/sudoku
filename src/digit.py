@@ -12,7 +12,8 @@ from image import shrink_vertically
 
 
 DIGIT_BITMAP_SIZE = 16
-
+MODEL_FILE = os.path.join(os.path.dirname(__file__), 'model.dat')
+_CLASSIFIER = None
 
 def extend_vertically(a, pixels):
     top = pixels // 2
@@ -78,10 +79,22 @@ def train_model(output_file='model.dat'):
         f.write(zlib.compress(pickle.dumps(c)))
 
 
-def load_model(file='model.dat'):
+def load_model(file=MODEL_FILE):
     with open(file, 'br') as f:
         return pickle.loads(zlib.decompress(f.read()))
 
+
+def initialize_predictor():
+    global _CLASSIFIER
+    _CLASSIFIER = load_model()
+
+
+def predict(a):
+    """Identify a 1-9 digit given a bitmap array"""
+    a = reshape_bitmap(a)
+    instance = a.flatten()
+    result = _CLASSIFIER.predict([instance])
+    return result[0]
 
 def evaluate_classifier():
     """Evaluate digit bitmap classifier using cross-validation"""
