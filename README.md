@@ -40,4 +40,5 @@ follows these steps:
 * There is a simple frontend page to try out
   the system: frontend/index.html. You can open
   it in your browser to check out the system
-  in action.
+  in action: https://demo-f43e64cbc9fe40af17cc8124cb3ed73f.s3.eu-central-1.amazonaws.com SLASH index.html
+  
