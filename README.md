@@ -18,7 +18,7 @@ follows these steps:
   "black" lines that are likely to define a
   9x9 grid of "white-ish" cells in the image.
   This is done heuristically using a few
-  fine-tuned parameteters. See src/grid.py
+  fine-tuned parameters. See src/grid.py
 * For each non-empty cell identified in the grid,
   apply a classifier to determine which of the 
   digits 1, 2,..., 9 it contains. The classifier
@@ -35,7 +35,7 @@ follows these steps:
   final solution using search with backtracking.
   See src/sudoku.py
 * The system is deployed to AWS Lambda using SAM 
-  and exposed as arestful API. See src/app.py,
+  and exposed as a restful API. See src/app.py,
   template.yaml and samconfig.toml
 * There is a simple frontend page to try out
   the system: frontend/index.html. You can open
